@@ -3,8 +3,7 @@
         ;.386
         .STACK          
 
-        .DATA 
-OPCION   DB  ?          
+        .DATA     
 NUMBER1      DB      ?
 NUMBER2      DB      ?
 RESULT     DB      ?
