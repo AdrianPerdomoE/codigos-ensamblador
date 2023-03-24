@@ -109,6 +109,15 @@ VALIDAR_INGRESO:
 ;**********************************************************
 
 
+;*********** OPERACIONES *************************
+SUMAR:
+    RET
+RESTAR:
+    RET
+MULTIPLICAR:
+    RET
+DIVIDIR:
+    RET
 ;*********** PROGRAMA PRINCIPAL *************************
 MAIN:   CALL    SEG_DAT
 
@@ -128,7 +137,7 @@ CICLOING:
         CMP     AL,'E'
         JE      SALIR
         JMP     CICLOING
-        
+
 SALIR:  MOV     AH,4CH
         INT     21H
    END
