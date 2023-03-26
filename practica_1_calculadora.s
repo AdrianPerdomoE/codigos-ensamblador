@@ -1,142 +1,182 @@
-;****** PROGRAMA CALCULADORA *********** 
- .MODEL  SMALL
-        ;.386
-        .STACK          
-
-        .DATA     
-NUMBER1      DB      ?
-NUMBER2      DB      ?
-RESULT     DB      ?
+;** PROGRAMA CALCULADORA *****  
+        .MODEL  SMALL 
+	.386 
+	.STACK           
+	.DATA      
+N1	DB	?
+N2	DB      ?
+RES	DB      ?
 UNI     DB      ?
 DECE    DB      ?
-MENSAJE_INICIAL:    DB     'CALCULADORA PARA NUMEROS DE DOS DIGITOS INGRESE LA OPCION CORESPONDIENTE A LA OPERACION QUE DESEA REALIZAR: $'
-MENSAJE_OPCIONES:   DB      'OPCIONES: $'
-MENSAJE_INGRESO_INVALIDO:   DB      'VALOR INGRESADO NO CORRESPONDE A UN NUMERO, INGRESE UN VALOR NUEVAMENTE: $'
-MENSAJE_OPCION1:    DB      '<S> PARA SUMAR. $'
-MENSAJE_OPCION2:    DB      '<R> PARA RESTAR. $'
-MENSAJE_OPCION3:    DB      '<M> PARA MULTIPLICAR. $'
-MENSAJE_OPCION4:    DB      '<D> PARA DIVIDIR. $'
-MENSAJE_NUMERO1:     DB     'INGRESAR NUMERO 1: $'
-MENSAJE_NUMERO2:     DB     'INGRESAR NUMERO 2: $'
-MENSAJE_RESULTADO:    DB     'RESULTADO DE LA OPERACION: $'
-MENSAJE_SALIR:  DB     'DIGITE <E> PARA SALIR: $'
-
-        .CODE
-        ORG     0000    
-        JMP     MAIN
-
-;****** DEFINICION DEL SEGMENTO DE DATOS ***********       
-SEG_DAT:
-        MOV     AX,@DATA
-        MOV     DS,AX
+MSSINC 	DB     	10,13,'CALCULADORA PARA NUMEROS DE DOS DIGITOS INGRESE LA OPCION CORESPONDIENTE A LA OPERACION QUE DESEA REALIZAR: $' 
+MSSOPC  DB      10,10,13,'OPCIONES: $' 
+MSGIIV:	DB      10,10,13,'VALOR INGRESADO NO CORRESPONDE A UN NUMERO, INGRESE UN VALOR NUEVAMENTE: $' 
+MSSOP1  DB      10,10,13,'<S> PARA SUMAR. $' 
+MSSOP2  DB      10,10,13,'<R> PARA RESTAR. $' 
+MSSOP3  DB      10,10,13,'<M> PARA MULTIPLICAR. $' 
+MSSOP4  DB      10,10,13,'<D> PARA DIVIDIR. $' 
+MSSNUM1 DB     	10,10,13,'INGRESAR NUMERO 1: $' 
+MSSNUM2 DB     	10,10,13,'INGRESAR NUMERO 2: $' 
+MSSRES  DB     	10,10,13,'RES DE LA OPERACION: $' 
+MSGSAL  DB     	10,10,13,'DIGITE <E> PARA SALIR: $'
+ASCVAL  DB      5 DUP(00H),'$'
+BINVAL  DW      0000 
+         .CODE 
+         ORG     0000     
+         JMP     MAIN 
+;** DEFINICION DEL SEGMENTO DE DATOS *****        
+ SEG_DAT: 
+         MOV     AX,@DATA 
+         MOV     DS,AX 
+         RET 
+;****************** 
+;********************
+BINASCII:       
+	LEA     SI,ASCVAL
+        MOV     CX,5
+        MOV     AL,00H
+C10:    MOV     [SI],AL
+        INC     SI
+        LOOP    C10
+        MOV     CX,10
+        LEA     SI,ASCVAL+4
+        MOV     AX,BINVAL
+C20:    CMP     AX,CX
+        JB      C30
+        XOR     DX,DX
+        DIV     CX
+        OR      DL,30H
+        MOV     [SI],DL
+        DEC     SI
+        JMP     C20
+C30:    OR      AL,30H
+        MOV     [SI],AL
         RET
-;****************************************************
-
-;******* MENSAJE MENU DE OPCIONES *******************************
-VISUALIZAR_MENU:
-    MOV     DX,OFFSET MENSAJE_INICIAL
-    MOV     AH,09h
-    INT     21h
-;******* MENSAJE OPCIONES *******************************
-    MOV     DX,OFFSET MENSAJE_OPCIONES
-    MOV     AH,09h
-    INT     21h
-;******* MENSAJE OPCION SUMA *******************************
-    MOV     DX,OFFSET MENSAJE_OPCION1
-    MOV     AH,09h
-    INT     21h
-;******* MENSAJE OPCION RESTA*******************************
-    MOV     DX,OFFSET MENSAJE_OPCION2
-    MOV     AH,09h
-    INT     21h
-;******* MENSAJE OPCION MULTIPLICAR *******************************
-    MOV     DX,OFFSET MENSAJE_OPCION3
-    MOV     AH,09h
-    INT     21h
-;******* MENSAJE OPCION DIVISION*******************************
-    MOV     DX,OFFSET MENSAJE_OPCION4
-    MOV     AH,09h
-    INT     21h
-    RET
-;******* MENSAJE NUMERO 1 *******************************
-VISUALIZAR_MENSAJE_NUMERO1:
-        MOV     DX,OFFSET MENSAJE_NUMERO1
-        MOV     AH,09H
-        INT     21H
-        RET
-;****************************************************
-
-;******* MENSAJE NUMERO 2 *******************************
-VISUALIZAR_MENSAJE_NUMERO2:
-        MOV     DX,OFFSET MENSAJE_NUMERO2
-        MOV     AH,09H
-        INT     21H
-        RET
-;******* MENSAJE RESULTADO *******************************
-VISUALIZAR_RESULTADO:
-        MOV     DX,OFFSET MENSAJE_RESULTADO
-        MOV     AH,09H
-        INT     21H
-        RET
-;****************************************************
-
-;******* MENSAJE  SALIR *******************************
-VISUALIZAR_MENSAJE_SALIR:
-        MOV     DX,OFFSET MENSAJE_SALIR
-        MOV     AH,09H
-        INT     21H
-        RET
-;****************************************************
-
-;********** INGRESO NUMERO *****************************
-INGRESO:
-        MOV     AH,01H
-        INT     21H
-        RET
-;********** INGRESO INVALIDO *****************************
-INGRESO_INVALIDO:  
-    MOV     DX,OFFSET MENSAJE_INGRESO_INVALIDO
-    MOV     AH,09H
-    INT     21H
-    JMP     INGRESO    
-;********** VALIDAR QUE EL VALOR INGRESADO SEA NUMERICO *****************************
-VALIDAR_INGRESO:  
-     CMP     AL, 39H
-     JG      INGRESO_INVALIDO
-     RET
-
-;**********************************************************
+;********************
 
 
-;*********** OPERACIONES *************************
-SUMAR:
-    RET
-RESTAR:
-    RET
-MULTIPLICAR:
-    RET
-DIVIDIR:
-    RET
-;*********** PROGRAMA PRINCIPAL *************************
-MAIN:   CALL    SEG_DAT
-
-CICLOING:
-        CALL    VISUALIZAR_MENU
-        CALL    INGRESO
-        CMP     AL,'S'
-        JE      SUMAR
-        CMP     AL,'R'
-        JE      RESTAR
-        CMP     AL,'M'
-        JE      MULTIPLICAR
-        CMP     AL,'D'
-        JE      DIVIDIR
-        CALL    VISUALIZAR_MENSAJE_SALIR
-        CALL    INGRESO
-        CMP     AL,'E'
-        JE      SALIR
-        JMP     CICLOING
-
-SALIR:  MOV     AH,4CH
-        INT     21H
-   END
+ 
+;*** MENSAJE MENU DE OPCIONES *********** 
+VIZMEN: 
+     MOV     DX,OFFSET MSSINC 
+     MOV     AH,09h 
+     INT     21h 
+;*** MENSAJE OPCIONES *********** 
+     MOV     DX,OFFSET MSSOPC 
+     MOV     AH,09h 
+     INT     21h 
+;*** MENSAJE OPCION SUMA *********** 
+     MOV     DX,OFFSET MSSOP1 
+     MOV     AH,09h 
+     INT     21h 
+;*** MENSAJE OPCION RESTA*********** 
+     MOV     DX,OFFSET MSSOP2 
+     MOV     AH,09h 
+     INT     21h 
+;*** MENSAJE OPCION MULTIPLICAR *********** 
+     MOV     DX,OFFSET MSSOP3 
+     MOV     AH,09h 
+     INT     21h 
+;*** MENSAJE OPCION DIVISION*********** 
+     MOV     DX,OFFSET MSSOP4 
+     MOV     AH,09h 
+     INT     21h 
+     RET 
+;*** MENSAJE NUMERO 1 *********** 
+VIZ_MSSNUM1: 
+         MOV     DX,OFFSET MSSNUM1 
+         MOV     AH,09H 
+         INT     21H 
+         RET 
+;****************** 
+ 
+ 
+;*** MENSAJE NUMERO 2 *********** 
+VIZ_MSSNUM2: 
+         MOV     DX,OFFSET MSSNUM2 
+         MOV     AH,09H 
+         INT     21H 
+         RET 
+;*** MENSAJE RES *********** 
+VIZ_RES: 
+         MOV     DX,OFFSET MSSRES 
+         MOV     AH,09H          
+	 INT     21H 
+         RET 
+;****************** 
+ 
+ 
+;*** MENSAJE  SALIR *********** 
+VIZ_MSGSAL: 
+         MOV     DX,OFFSET MSGSAL 
+         MOV     AH,09H 
+         INT     21H 
+         RET 
+;****************** 
+ 
+ 
+;**** INGRESO NUMERO *********** 
+INGRESO: 
+         MOV     AH,01H 
+         INT     21H 
+         RET 
+;********************
+INGRESO2DIG:
+	MOV	AH,01H
+	INT	21H
+	AND	AL,0FH
+	MOV	AH,0
+	MOV	DL,10
+	MUL	DL
+        MOV     BL,AL
+	MOV	AH,01H
+	INT	21H
+	AND	AL,0FH
+	ADD	BL,AL
+	RET
+;********************
+;**** INGRESO INVALIDO *********** 
+ INGRESO_INVALIDO:   
+     MOV     DX,OFFSET MSGIIV 
+     MOV     AH,09H 
+     INT     21H 
+     JMP     INGRESO     
+;**** VALIDAR QUE EL VALOR INGRESADO SEA NUMERICO *********** 
+VALIDAR_INGRESO:   
+      CMP     AL, 39H 
+      JG      INGRESO_INVALIDO 
+      RET 
+  
+;******************** 
+;**** OPERACIONES ********** 
+SUMAR: 
+     RET 
+RESTAR: 
+     RET 
+MULTIPLICAR: 
+     RET 
+DIVIDIR: 
+     RET 
+;**** PROGRAMA PRINCIPAL ********** 
+ MAIN:   CALL    SEG_DAT 
+ 
+CICLOING: 
+         CALL    VIZMEN 
+         CALL    INGRESO 
+         CMP     AL,'S' 
+         JE      SUMAR 
+         CMP     AL,'R' 
+         JE      RESTAR 
+         CMP     AL,'M' 
+         JE      MULTIPLICAR 
+         CMP     AL,'D' 
+         JE      DIVIDIR 
+         CALL    VIZ_MSGSAL 
+         CALL    INGRESO 
+         CMP     AL,'E' 
+         JE      SALIR 
+         JMP     CICLOING  
+SALIR:  
+	MOV     AH,4CH 
+        INT     21H 
+    END
