@@ -3,9 +3,9 @@
 	.386 
 	.STACK           
 	.DATA      
-N1	DB	?
-N2	DB      ?
-RES	DB      ?
+N1	DB	        ?
+N2	DB          ?
+RES	DB          ?
 UNI     DB      ?
 DECE    DB      ?
 MSSINC 	DB     	10,13,'CALCULADORA PARA NUMEROS DE DOS DIGITOS INGRESE LA OPCION CORESPONDIENTE A LA OPERACION QUE DESEA REALIZAR: $' 
