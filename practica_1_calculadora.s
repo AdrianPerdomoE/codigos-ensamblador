@@ -274,7 +274,8 @@ CICLOING:
      CALL	 VIZOPCS
      CALL	 VIZOPCR
      CALL	 VIZOPCM
-     CALL	 VIZOPCD	
+     CALL	 VIZOPCD
+     CALL    VIZ_MSGSAL 	
      CALL    INGRESO 
      CMP     AL,'S' 
      JE      SUMAR 
@@ -284,8 +285,6 @@ CICLOING:
      JE      MULTIPLICAR 
      CMP     AL,'D' 
      JE      DIVIDIR 
-     CALL    VIZ_MSGSAL 
-     CALL    INGRESO 
      CMP     AL,'E' 
      JE      SALIR 
      JMP     CICLOING  
